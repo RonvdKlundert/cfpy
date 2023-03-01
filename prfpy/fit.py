@@ -1383,15 +1383,15 @@ class CFFitter(Fitter):
 
         # output
         self.gridsearch_params = np.array([
-            self.model.vert_centres_flat[max_rsqs],
             self.model.sigmas_flat[max_rsqs],
             self.best_fitting_beta,
-            self.best_fitting_baseline,
+            self.best_fitting_baseline,          
+            self.model.vert_centres_flat[max_rsqs],
             self.gridsearch_r2
         ]).T
         
         # Put the vertex centres into a dictionary.
-        self.vertex_centres=self.gridsearch_params[:,0].astype(int)
+        self.vertex_centres=self.gridsearch_params[:,3].astype(int)
         self.vertex_centres_dict = [{'vert':k} for k in self.vertex_centres]
         
     def quick_grid_fit(self,sigma_grid):

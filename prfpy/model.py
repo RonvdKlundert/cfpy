@@ -789,7 +789,11 @@ class CFGaussianModel():
             
         # We can grab the row of the distance matrix corresponding to this vertex and make the rf.
         rf=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sigma)])
-            
+        
+        # normalize beta and rf by rf
+        beta = beta/np.sum(rf)
+        rf=rf/np.sum(rf)
+        
         # Dot with the data to make the predictions. 
         neural_tc = stimulus_through_prf(rf, self.stimulus.design_matrix, 1)
     
@@ -894,8 +898,9 @@ class Norm_CFGaussianModel(CFGaussianModel):
         
             
         # normalize amplitudes and cfs by cfs
-        sCF_amplitude = srf_amplitude/np.sum(sCF)
         CF_amplitude = prf_amplitude/np.sum(CF)
+        sCF_amplitude = srf_amplitude/np.sum(sCF)
+        
         
         CF=prf/np.sum(CF)
         sCF=srf/np.sum(sCF)
