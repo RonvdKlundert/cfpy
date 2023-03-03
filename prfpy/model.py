@@ -814,115 +814,115 @@ class CFGaussianModel():
         
     
 
-    class Norm_CFGaussianModel(CFGaussianModel):
-        """Norm_Iso2DGaussianModel
-        Redefining class for normalization model
+class Norm_CFGaussianModel(CFGaussianModel):
+    """Norm_Iso2DGaussianModel
+    Redefining class for normalization model
+    """
+    def create_grid_predictions(self,
+                                gaussian_params,
+                                sa,
+                                ss,
+                                nb,
+                                sb):
+        """create_predictions
+        creates predictions for a given set of parameters
+        [description]
+        Parameters
+        ----------
+        gaussian_params: ndarray size (3)
+            containing prf position and size.
+        sa,ss,nb,sb: ndarrays
+            containing the range of grid values for other norm model parameters
+            (surroud amplitude (C), surround size (sigma_2), neural baseline (B), surround baseline (D))
+        
         """
-        def create_grid_predictions(self,
-                                    gaussian_params,
+        
+        
+        
+        
+        prediction_params = np.array([gaussian_params[0],
+                                    gaussian_params[1],
+                                    gaussian_params[2],
+                                    gaussian_params[3],
                                     sa,
                                     ss,
                                     nb,
-                                    sb):
-            """create_predictions
-            creates predictions for a given set of parameters
-            [description]
-            Parameters
-            ----------
-            gaussian_params: ndarray size (3)
-                containing prf position and size.
-            sa,ss,nb,sb: ndarrays
-                containing the range of grid values for other norm model parameters
-                (surroud amplitude (C), surround size (sigma_2), neural baseline (B), surround baseline (D))
-            
-            """
-            
-            
-            
-            
-            prediction_params = np.array([gaussian_params[0],
-                                        gaussian_params[1],
-                                        gaussian_params[2],
-                                        gaussian_params[3],
-                                        sa,
-                                        ss,
-                                        nb,
-                                        sb])
-            
-            return(np.array([self.return_prediction(*prediction_params[:,i])[0] for i in range(prediction_params.shape[-1])]))
+                                    sb])
+        
+        return(np.array([self.return_prediction(*prediction_params[:,i])[0] for i in range(prediction_params.shape[-1])]))
+    
+    
+    
+    def return_prediction(self,
+                                CF_size,
+                                CF_amplitude,
+                                bold_baseline,
+                                vert,
+                                sCF_amplitude,
+                                sCF_size,
+                                neural_baseline,
+                                surround_baseline,
+                                ):
+        """return_prediction [summary]
+        returns the prediction for a single set of parameters.
+        Parameters
+        ----------
+        CF_size : float
+            sigma_1
+        CF_amplitude : float
+            Norm Param A
+        bold_baseline : float
+            BOLD baseline (generally kept fixed)
+        vert : int
+            Vertex centre (kept fixed)
+        sCF_amplitude : float
+            Norm Param C
+        sCF_size : float
+            sigma_2
+        neural_baseline : float
+            Norm Param B
+        surround_baseline : float
+            Norm Param D
+        hrf_1, hrf_2 : floats, optional
+            hrf parameters, specified only if hrf is being fit to data, otherwise not needed.
+        Returns
+        -------
+        numpy.ndarray
+            prediction(s) given the model
+        """
+        CF_amplitude=np.array(CF_amplitude)
+        bold_baseline=np.array(bold_baseline)
+        sCF_amplitude=np.array(sCF_amplitude)
+        sCF_size=np.array(sCF_size)
+        neural_baseline=np.array(neural_baseline)
+        surround_baseline=np.array(surround_baseline)
+        vert=round(vert)
+        
+        idx=np.where(self.stimulus.subsurface_verts==vert)[0][0]
         
         
+        # We can grab the row of the distance matrix corresponding to this vertex and make the rf.
+        CF=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, CF_size)])
+        sCF=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sCF_size)])
         
-        def return_prediction(self,
-                                    CF_size,
-                                    CF_amplitude,
-                                    bold_baseline,
-                                    vert,
-                                    sCF_amplitude,
-                                    sCF_size,
-                                    neural_baseline,
-                                    surround_baseline,
-                                    ):
-            """return_prediction [summary]
-            returns the prediction for a single set of parameters.
-            Parameters
-            ----------
-            CF_size : float
-                sigma_1
-            CF_amplitude : float
-                Norm Param A
-            bold_baseline : float
-                BOLD baseline (generally kept fixed)
-            vert : int
-                Vertex centre (kept fixed)
-            sCF_amplitude : float
-                Norm Param C
-            sCF_size : float
-                sigma_2
-            neural_baseline : float
-                Norm Param B
-            surround_baseline : float
-                Norm Param D
-            hrf_1, hrf_2 : floats, optional
-                hrf parameters, specified only if hrf is being fit to data, otherwise not needed.
-            Returns
-            -------
-            numpy.ndarray
-                prediction(s) given the model
-            """
-            CF_amplitude=np.array(CF_amplitude)
-            bold_baseline=np.array(bold_baseline)
-            sCF_amplitude=np.array(sCF_amplitude)
-            sCF_size=np.array(sCF_size)
-            neural_baseline=np.array(neural_baseline)
-            surround_baseline=np.array(surround_baseline)
-            vert=round(vert)
             
-            idx=np.where(self.stimulus.subsurface_verts==vert)[0][0]
-            
-            
-            # We can grab the row of the distance matrix corresponding to this vertex and make the rf.
-            CF=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, CF_size)])
-            sCF=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sCF_size)])
-            
-                
-            # normalize amplitudes and cfs by cfs
-            CF_amplitude = prf_amplitude/np.sum(CF)
-            sCF_amplitude = srf_amplitude/np.sum(sCF)
-            
-            
-            CF=prf/np.sum(CF)
-            sCF=srf/np.sum(sCF)
-            
+        # normalize amplitudes and cfs by cfs
+        CF_amplitude = prf_amplitude/np.sum(CF)
+        sCF_amplitude = srf_amplitude/np.sum(sCF)
+        
+        
+        CF=prf/np.sum(CF)
+        sCF=srf/np.sum(sCF)
         
     
-            dm = self.stimulus.design_matrix
-                
-            # create normalization model timecourse
-            neural_tc = (CF_amplitude[..., np.newaxis] * stimulus_through_prf(CF, dm, 1) + neural_baseline[..., np.newaxis]) /\
-                (sCF_amplitude[..., np.newaxis] * stimulus_through_prf(sCF, dm, 1) + surround_baseline[..., np.newaxis]) \
-                    - neural_baseline[..., np.newaxis]/surround_baseline[..., np.newaxis]
+
+        dm = self.stimulus.design_matrix
             
-                
-            return bold_baseline[..., np.newaxis] + neural_tc          
+        # create normalization model timecourse
+        neural_tc = (CF_amplitude[..., np.newaxis] * stimulus_through_prf(CF, dm, 1) + neural_baseline[..., np.newaxis]) /\
+            (sCF_amplitude[..., np.newaxis] * stimulus_through_prf(sCF, dm, 1) + surround_baseline[..., np.newaxis]) \
+                - neural_baseline[..., np.newaxis]/surround_baseline[..., np.newaxis]
+        
             
+        return bold_baseline[..., np.newaxis] + neural_tc          
+        
