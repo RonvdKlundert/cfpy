@@ -7,8 +7,8 @@
 - [] ..
 
 
-cfpy
-========
+## cfpy
+
 cfpy is a package that allows you to simulate 
 and fit population receptive field (pRF) parameters from time series data
 and fit connective field (CF) parameters from time series data.
@@ -32,8 +32,8 @@ To install dependencies with pip directly, run
 python -m pip install -e .
 
 
-License
-=======
+## License
+
 ``prfpy`` is licensed under the terms of the GPL-v3 license. See the file
 "LICENSE" for information on the history of this software, terms & conditions
 for usage, and a DISCLAIMER OF ALL WARRANTIES.
