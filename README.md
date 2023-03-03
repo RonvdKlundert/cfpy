@@ -3,6 +3,7 @@
 
 - [x] add normalization CF 
 - [x] remove Subsurface functionality from this repo, add to [dncf](https://github.com/RonvdKlundert/cfdn) so this repo can lose the pycortex depency
+- [] make normalize CF and CF amplitude toggable
 - [] add grid fit for normalization CF
 - [] visualization of fitting process per step to see why DN does not change fit in some instances
 - [] ..
