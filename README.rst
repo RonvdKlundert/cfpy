@@ -1,7 +1,7 @@
 ## To Do
 
 - [x] add normalization CF
-- [x] remove Subsurface functionality from this repo, add to [dncf](https://github.com/RonvdKlundert/dncf) so this repo can lose the pycortex depency
+- [x] remove Subsurface functionality from this repo, add to [dncf](https://github.com/RonvdKlundert/cfdn) so this repo can lose the pycortex depency
 - [] add grid fit for normalization CF
 - [] ..
 
