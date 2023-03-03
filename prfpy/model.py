@@ -804,7 +804,7 @@ class CFGaussianModel():
 
         # normalize beta and rf by rf
         beta = beta/np.sum(cf)
-        cf=rf/np.sum(cf)
+        cf=cf/np.sum(cf)
             
         # Dot with the data to make the predictions. 
         neural_tc = stimulus_through_prf(cf, self.stimulus.design_matrix, 1)
@@ -911,8 +911,8 @@ class Norm_CFGaussianModel(CFGaussianModel):
         sCF_amplitude = srf_amplitude/np.sum(sCF)
         
         
-        CF=prf/np.sum(CF)
-        sCF=srf/np.sum(sCF)
+        CF=CF/np.sum(CF)
+        sCF=sCF/np.sum(sCF)
         
     
 
