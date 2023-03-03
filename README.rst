@@ -1,7 +1,16 @@
-pRFpy
+## To Do
+
+- [x] add normalization CF
+- [x] remove Subsurface functionality from this repo, add to [dncf](https://github.com/RonvdKlundert/dncf) so this repo can lose the pycortex depency
+- [] add grid fit for normalization CF
+- [] ..
+
+
+cfpy
 ========
-pRFpy is a package that allows you to simulate 
-and fit population receptive field (pRF) parameters from time series data.
+cfpy is a package that allows you to simulate 
+and fit population receptive field (pRF) parameters from time series data
+and fit connective field (CF) parameters from time series data.
 
 
 To get started using these components in your own software, clone this repository, then run
