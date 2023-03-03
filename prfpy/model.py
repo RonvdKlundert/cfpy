@@ -792,10 +792,13 @@ class CFGaussianModel():
         
         beta=np.array(beta)
         baseline=np.array(baseline)
+
+        # Round the vert as during fitting the value might change very slightly giving errors
+        vert=round(vert)
         
         # Find the row of the distance matrix that corresponds to that vertex.
         idx=np.where(self.stimulus.subsurface_verts==vert)[0][0]
-            
+        
         # We can grab the row of the distance matrix corresponding to this vertex and make the rf.
         cf=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sigma)])
 
