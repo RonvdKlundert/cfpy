@@ -907,8 +907,8 @@ class Norm_CFGaussianModel(CFGaussianModel):
         
             
         # normalize amplitudes and cfs by cfs
-        CF_amplitude = prf_amplitude/np.sum(CF)
-        sCF_amplitude = srf_amplitude/np.sum(sCF)
+        CF_amplitude = CF_amplitude/np.sum(CF)
+        sCF_amplitude = sCF_amplitude/np.sum(sCF)
         
         
         CF=CF/np.sum(CF)
