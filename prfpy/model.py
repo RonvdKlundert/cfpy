@@ -798,6 +798,10 @@ class CFGaussianModel():
             
         # We can grab the row of the distance matrix corresponding to this vertex and make the rf.
         rf=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sigma)])
+
+        # normalize beta and rf by rf
+        beta = beta/np.sum(rf)
+        rf=rf/np.sum(rf)
             
         # Dot with the data to make the predictions. 
         neural_tc = stimulus_through_prf(rf, self.stimulus.design_matrix, 1)
