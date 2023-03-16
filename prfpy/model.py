@@ -736,7 +736,11 @@ class CFGaussianModel():
         if self.func=='cart':
             
             # Make the receptive fields extend over the distances controlled by each of the sigma.
-            self.grid_rfs  = np.array([gauss1D_cart(self.stimulus.distance_matrix, 0, s) for s in self.sigmas])
+            self.grid_rfs  = np.array([gauss1D_cart(self.stimulus.distance_matrix, 0, s) for s in self.sigmas])\
+            
+            # Normalize the CFs by the sum of the CFs 
+            for s in range(len(self.sigmas)):
+                self.grid_rfs[s,:,:] = self.grid_rfs[s,:,:] / self.grid_rfs[s,:,:].sum(axis=1)[:,np.newaxis]
         
         # Reshape.
         self.grid_rfs=self.grid_rfs.reshape(-1, self.grid_rfs.shape[-1])
