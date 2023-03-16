@@ -1287,7 +1287,7 @@ class CFFitter(Fitter):
     """
     
     
-    def grid_fit(self,sigma_grid,verbose=False,n_batches=1000, fixed_grid_baseline=None, normalize_cf=True):
+    def grid_fit(self,sigma_grid,verbose=False,n_batches=1000, fixed_grid_baseline=None):
         
         
         """grid_fit
@@ -1315,7 +1315,7 @@ class CFFitter(Fitter):
         """
         
         
-        self.model.create_grid_predictions(sigma_grid, normalize_cf=normalize_cf)
+        self.model.create_grid_predictions(sigma_grid)
         self.model.predictions = self.model.predictions.astype('float32')
         
         def rsq_betas_for_batch(data, vox_num, predictions,

@@ -702,7 +702,7 @@ class CFGaussianModel():
     """
     
     
-    def __init__(self,stimulus):
+    def __init__(self,stimulus, normalize_cf=None, normalize_b=None):
         
         
         """__init__
@@ -713,10 +713,12 @@ class CFGaussianModel():
         """
         
         self.stimulus=stimulus
+        self.normalize_cf=normalize_cf
+        self.normalize_b=normalize_b
         
         
         
-    def create_rfs(self, normalize_cf):
+    def create_rfs(self):
         
         """create_rfs
 
@@ -738,9 +740,8 @@ class CFGaussianModel():
             # Make the receptive fields extend over the distances controlled by each of the sigma.
             self.grid_rfs  = np.array([gauss1D_cart(self.stimulus.distance_matrix, 0, s) for s in self.sigmas])\
             
-
-            if normalize_cf:
-                # Normalize the CFs by the sum of the CFs 
+            # normalize the CFs by the sum of the CFs if required.
+            if self.normalize_cf: 
                 for s in range(len(self.sigmas)):
                     self.grid_rfs[s,:,:] = self.grid_rfs[s,:,:] / self.grid_rfs[s,:,:].sum(axis=1)[:,np.newaxis]
         
@@ -777,7 +778,7 @@ class CFGaussianModel():
         
         self.sigmas=sigmas
         self.func=func
-        self.create_rfs(normalize_cf)
+        self.create_rfs()
         self.stimulus_times_prfs()
         
         
@@ -808,9 +809,12 @@ class CFGaussianModel():
         # We can grab the row of the distance matrix corresponding to this vertex and make the rf.
         cf=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sigma)])
 
-        # normalize beta and rf by rf
-        beta = beta/np.sum(cf)
-        cf=cf/np.sum(cf)
+        # check if we want to normalize the CF and the amplitude
+        if self.normalize_cf:
+            cf=cf/np.sum(cf)
+
+        if self.normalize_b:
+            beta = beta/np.sum(cf)
             
         # Dot with the data to make the predictions. 
         neural_tc = stimulus_through_prf(cf, self.stimulus.design_matrix, 1)
@@ -912,13 +916,18 @@ class Norm_CFGaussianModel(CFGaussianModel):
         sCF=np.array([gauss1D_cart(self.stimulus.distance_matrix[idx], 0, sCF_size)])
         
             
-        # normalize amplitudes and cfs by cfs
-        CF_amplitude = CF_amplitude/np.sum(CF)
-        sCF_amplitude = sCF_amplitude/np.sum(sCF)
+        # check if normalizing by the sum of the cf is needed for the model
+        if self.normalize_cf:
+            CF=CF/np.sum(CF)
+            sCF=sCF/np.sum(sCF)
+
+        if self.normalize_b:
+            CF_amplitude = CF_amplitude/np.sum(CF)
+            sCF_amplitude = sCF_amplitude/np.sum(sCF)
+            
+      
         
         
-        CF=CF/np.sum(CF)
-        sCF=sCF/np.sum(sCF)
         
     
 
