@@ -107,6 +107,7 @@ def iterative_search(model, data, start_params, args, xtol, ftol, verbose=True,
                               constraints=constraints,
                               tol=ftol,
                               options=dict(xtol=xtol,
+                                           gtol=1e-8
                                            disp=verbose))
 
 
@@ -1286,7 +1287,7 @@ class CFFitter(Fitter):
     """
     
     
-    def grid_fit(self,sigma_grid,verbose=False,n_batches=1000):
+    def grid_fit(self,sigma_grid,verbose=False,n_batches=1000, fixed_grid_baseline=None):
         
         
         """grid_fit
@@ -1328,10 +1329,15 @@ class CFFitter(Fitter):
                 sumd = np.sum(vox_data)
 
                 # best slopes and baselines for voxel for predictions
-                slopes = (n_timepoints * np.dot(vox_data, predictions.T) - sumd *
-                          sum_preds) / (n_timepoints * square_norm_preds - sum_preds**2)
-                baselines = (sumd - slopes * sum_preds) / n_timepoints
-
+                if fixed_grid_baseline is None:
+                    slopes = (n_timepoints * np.dot(vox_data, predictions.T) - sumd *
+                              sum_preds) / (n_timepoints * square_norm_preds - sum_preds**2)
+                    baselines = (sumd - slopes * sum_preds) / n_timepoints
+                else:     
+                    slopes = (np.dot(vox_data-fixed_grid_baseline, predictions.T)) / (square_norm_preds)                   
+                    baselines = fixed_grid_baseline * np.ones_like(slopes)
+                    
+                    
                 # resid and rsq
                 resid = np.linalg.norm((vox_data -
                                         slopes[..., np.newaxis] *
