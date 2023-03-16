@@ -107,12 +107,12 @@ def iterative_search(model, data, start_params, args, xtol, ftol, verbose=True,
                               constraints=constraints,
                               tol=ftol,
                               options=dict(xtol=xtol,
-                                           gtol=1e-8,
+                                           gtol=1e-15,
                                            disp=verbose))
 
 
             # output = basinhopping(error_function, start_params,
-            #                       niter=10, T=0.01*(len(data) * data.var()), stepsize=2,
+            #                       niter=50, T=0.01*(len(data) * data.var()), stepsize=2,
             #                       minimizer_kwargs=dict(method='L-BFGS-B',
             #                                             bounds=bounds,
             #                                             options=dict(maxls=60, disp=verbose),
@@ -1287,7 +1287,7 @@ class CFFitter(Fitter):
     """
     
     
-    def grid_fit(self,sigma_grid,verbose=False,n_batches=1000, fixed_grid_baseline=None):
+    def grid_fit(self,sigma_grid,verbose=False,n_batches=1000, fixed_grid_baseline=None, normalize_grid=None):
         
         
         """grid_fit
@@ -1315,7 +1315,7 @@ class CFFitter(Fitter):
         """
         
         
-        self.model.create_grid_predictions(sigma_grid)
+        self.model.create_grid_predictions(sigma_grid, normalize_grid)
         self.model.predictions = self.model.predictions.astype('float32')
         
         def rsq_betas_for_batch(data, vox_num, predictions,
