@@ -107,7 +107,7 @@ def iterative_search(model, data, start_params, args, xtol, ftol, verbose=True,
                               constraints=constraints,
                               tol=ftol,
                               options=dict(xtol=xtol,
-                                           gtol=1e-15,
+                                           gtol=1e-8,
                                            disp=verbose))
 
 
